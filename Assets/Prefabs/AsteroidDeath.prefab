@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3016510377354951856}
   - component: {fileID: 6982627463201536763}
   - component: {fileID: 7561965177152077329}
+  - component: {fileID: 7582679543876726986}
   m_Layer: 0
   m_Name: AsteroidDeath
   m_TagString: Untagged
@@ -4812,3 +4813,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &7582679543876726986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593033685150405386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d99ce73949cc42e6ae0e5368d49d1f83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _time: 1
