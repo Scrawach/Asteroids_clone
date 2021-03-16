@@ -1,2 +1,2 @@
-# Asteroids_clone
+# Asteroids Clone
 Simple Unity clone for Asteroids game
