@@ -15,7 +15,7 @@ namespace Player
         [SerializeField] 
         private float _cooldownTime;
 
-        private float _elapsedTime;
+        private float _elapsedTime = float.MaxValue;
 
         private void Update()
         {
