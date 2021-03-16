@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Player
 {
     [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(Weapon))]
     public class PlayerInput : MonoBehaviour
     {
         private const string HorizontalAxis = "Horizontal";
@@ -11,17 +12,22 @@ namespace Player
         private const string FireButton = "Fire1";
 
         private Mover _ship;
+        private Weapon _weapon;
         
         private Vector2 _desiredDirection;
 
         private void Awake()
         {
             _ship = GetComponent<Mover>();
+            _weapon = GetComponent<Weapon>();
         }
 
         private void Update()
         {
             _desiredDirection = ReadInput().normalized;
+            
+            if (Input.GetButton(FireButton))
+                _weapon.TryFire();
         }
 
         private void FixedUpdate() => 
