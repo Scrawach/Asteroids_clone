@@ -1,20 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using Infrastructure;
+using UI;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Environment
 {
     public class Spawner : MonoBehaviour
     {
         [SerializeField] 
-        private Asteroid _asteroidPrefab;
-
-        [SerializeField] 
         private Rect _spawnZone;
 
         [SerializeField] 
-        private float _spawnCooldown;
+        private Rect _workingZone;
 
+        [SerializeField] 
+        private float _spawnCooldown;
+        
         private float _elapsedTime;
         
+        private GameFactory _gameFactory;
+
+        public void Construct(GameFactory gameFactory) => 
+            _gameFactory = gameFactory;
+
         private void Update()
         {
             if (CanSpawn())
@@ -62,7 +71,7 @@ namespace Environment
                     break;
             }
 
-            Instantiate(_asteroidPrefab, position, rotation);
+            _gameFactory.CreateAsteroid(position, rotation, 1);
         }
         
         private Vector2 GetRandomPosition()

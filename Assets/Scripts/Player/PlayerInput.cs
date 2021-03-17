@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Player
 {
-    [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(Engine))]
     [RequireComponent(typeof(Weapon))]
     public class PlayerInput : MonoBehaviour
     {
@@ -11,14 +11,14 @@ namespace Player
         private const string VerticalAxis = "Vertical";
         private const string FireButton = "Fire1";
 
-        private Mover _ship;
+        private Engine _ship;
         private Weapon _weapon;
         
         private Vector2 _desiredDirection;
 
         private void Awake()
         {
-            _ship = GetComponent<Mover>();
+            _ship = GetComponent<Engine>();
             _weapon = GetComponent<Weapon>();
         }
 

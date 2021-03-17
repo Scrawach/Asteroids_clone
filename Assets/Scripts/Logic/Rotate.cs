@@ -8,9 +8,7 @@ namespace Logic
         [SerializeField] 
         private float _speedInDegrees;
 
-        private void Update()
-        {
+        private void Update() => 
             transform.Rotate(0, 0, _speedInDegrees * Time.deltaTime);
-        }
     }
 }

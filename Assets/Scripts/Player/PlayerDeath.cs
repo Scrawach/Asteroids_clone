@@ -1,16 +1,14 @@
-﻿using System;
+using System;
+using Logic;
 using UnityEngine;
 
-namespace Logic
+namespace Player
 {
     [RequireComponent(typeof(Death))]
-    public class DeathEffect : MonoBehaviour
+    public class PlayerDeath : MonoBehaviour
     {
-        [SerializeField] 
-        private ParticleSystem _effect;
-
         private Death _death;
-        
+
         private void Awake() => 
             _death = GetComponent<Death>();
 
@@ -21,6 +19,6 @@ namespace Logic
             _death.Happened -= OnDeathHappened;
 
         private void OnDeathHappened() => 
-            Instantiate(_effect, transform.position, Quaternion.identity);
+            Destroy(gameObject);
     }
 }

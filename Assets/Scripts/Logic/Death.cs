@@ -22,10 +22,7 @@ namespace Logic
         private void OnHealthChanged(int value)
         {
             if (value == 0)
-            {
                 Happened?.Invoke();
-                Destroy(gameObject);
-            }
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Mover : MonoBehaviour
+    public class Engine : MonoBehaviour
     {
         [SerializeField] 
         private float _speed;
@@ -13,11 +13,12 @@ namespace Player
         private float _accelerationModifier = 1;
         
         private Rigidbody2D _rigidbody;
-
-        private Vector2 _currentMovement;
-        private Vector2 _targetMovement;
-
+        
         private Vector2 _velocity;
+        private Rect _workingBounds;
+
+        public void Construct(Rect workingZone) => 
+            _workingBounds = workingZone;
 
         private void Awake() => 
             _rigidbody = GetComponent<Rigidbody2D>();
@@ -30,7 +31,10 @@ namespace Player
             _velocity += acceleration * Time.fixedDeltaTime;
 
             var movement = _velocity * Time.fixedDeltaTime;
-            _rigidbody.MovePosition(currentPosition + movement);
+            var nextPosition = currentPosition + movement;
+
+            var clampedPosition = nextPosition.Clamp(_workingBounds.min, _workingBounds.max);
+            _rigidbody.MovePosition(clampedPosition);
         }
     }
 }
