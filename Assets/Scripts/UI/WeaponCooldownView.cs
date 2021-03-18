@@ -11,10 +11,10 @@ namespace UI
         private Weapon _weapon;
 
         [SerializeField] 
-        private Image _cooldownBar;
+        private RectTransform _cooldownBar;
 
         private void Awake() => 
-            _cooldownBar.rectTransform.localScale = Vector3.one;
+            _cooldownBar.localScale = Vector3.one;
 
         private void OnEnable() => 
             _weapon.ElapsedTimeUpdated += OnElapsedTimeUpdated;
@@ -23,6 +23,6 @@ namespace UI
             _weapon.ElapsedTimeUpdated -= OnElapsedTimeUpdated;
 
         private void OnElapsedTimeUpdated(float value) => 
-            _cooldownBar.rectTransform.localScale = Vector3.one * value;
+            _cooldownBar.localScale = Vector3.one * value;
     }
 }
