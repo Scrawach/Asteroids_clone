@@ -15,5 +15,5 @@ MonoBehaviour:
   PlayerHealth: 1
   AsteroidRecycle: 1
   AlienHealth: 10
-  AsteroidSpawnCooldown: 1
+  AsteroidSpawnCooldown: 0.8
   AlienSpawnCooldown: 3
