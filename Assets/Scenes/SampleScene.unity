@@ -393,10 +393,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPlayingZone:
     serializedVersion: 2
-    x: -5
-    y: -5
-    width: 10
-    height: 10
+    x: -6.5
+    y: -4.8
+    width: 13
+    height: 9.6
   _playingZone:
     serializedVersion: 2
     x: -10
