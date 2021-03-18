@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: -3590085346177241312}
   - component: {fileID: 1998680944460660164}
   - component: {fileID: 955797537405576378}
+  - component: {fileID: 1945538180023466780}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -164,7 +165,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 8
-  _accelerationModifier: 8
 --- !u!70 &1998680944460660164
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -194,3 +194,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _effect: {fileID: 6982627463201536763, guid: d37b768c907a2734cb4c85ece154de97, type: 3}
+--- !u!114 &1945538180023466780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7994705462801969805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d99ce73949cc42e6ae0e5368d49d1f83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _time: 2
