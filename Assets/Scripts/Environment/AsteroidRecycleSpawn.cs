@@ -15,7 +15,6 @@ namespace Environment
         
         private GameFactory _gameFactory;
         private int _recycle;
-        private Death _death;
 
         public void Construct(GameFactory gameFactory, int recycle)
         {
@@ -23,16 +22,7 @@ namespace Environment
             _recycle = recycle;
         }
         
-        private void Awake() => 
-            _death = GetComponent<Death>();
-
-        private void OnEnable() => 
-            _death.Happened += OnDeathHappened;
-        
-        private void OnDisable() => 
-            _death.Happened -= OnDeathHappened;
-        
-        private void OnDeathHappened()
+        public void Spawn()
         {
             if (NeedRecycleSpawn())
                 RecycleSpawn();

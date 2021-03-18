@@ -16,6 +16,8 @@ namespace Player
         private float _cooldownTime;
 
         private float _elapsedTime = float.MaxValue;
+        
+        public event Action<float> ElapsedTimeUpdated;
 
         private void Update()
         {
@@ -40,8 +42,11 @@ namespace Player
         private void CreateBullet() =>
             Instantiate(_bulletPrefab, _shotPoint.position, transform.rotation);
 
-        private void UpdateCooldown() =>
+        private void UpdateCooldown()
+        {
             _elapsedTime += Time.deltaTime;
+            ElapsedTimeUpdated?.Invoke(_elapsedTime / _cooldownTime);
+        }
 
         private void ResetCooldown() =>
             _elapsedTime = 0f;

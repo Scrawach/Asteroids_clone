@@ -1,5 +1,10 @@
 using System;
+using Data;
+using Infrastructure.AssetManagement;
+using Logic;
+using Player;
 using UnityEngine;
+using Death = Logic.Death;
 
 namespace Infrastructure
 {
@@ -10,17 +15,36 @@ namespace Infrastructure
         
         [SerializeField] 
         private Rect _playingZone;
-        
-        private void Awake()
+
+        [SerializeField] 
+        private GameSettings _settings;
+
+        private void Awake() => 
+            InitGameWorld();
+
+        private void InitGameWorld()
+        {
+            var gameFactory = InitGameFactory();
+
+            gameFactory.CreateUIRoot();
+            gameFactory.CreateScoreView();
+            gameFactory.CreateSpawner(_settings);
+            
+            var playerDeath = gameFactory
+                .CreatePlayerShip(Vector3.zero, _settings.PlayerHealth, _playerPlayingZone)
+                .GetComponent<Death>();
+            
+            var gameOver = new GameOver(gameFactory, playerDeath);
+        }
+
+        private GameFactory InitGameFactory()
         {
             var scoreCounter = new ScoreCounter();
-            var gameFactory = new GameFactory(scoreCounter, _playingZone);
-
-            gameFactory.CreateHUD();
-            gameFactory.CreatePlayerShip(Vector3.zero, _playerPlayingZone);
-            gameFactory.CreateSpawner();
+            var assetProvider = new AssetProvider();
+            var gameFactory = new GameFactory(assetProvider, scoreCounter, _playingZone);
+            return gameFactory;
         }
-        
+
         private void OnDrawGizmos()
         {
             Gizmos.color = new Color32(200, 30, 30, 35);

@@ -55,4 +55,5 @@ MonoBehaviour:
     y: -5
     width: 10
     height: 10
-  _spawnCooldown: 1
+  _asteroidSpawnCooldown: 1
+  _alienSpawnCooldown: 2

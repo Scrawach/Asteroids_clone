@@ -8,9 +8,6 @@ namespace Player
     [RequireComponent(typeof(Mover))]
     public class Bullet : MonoBehaviour
     {
-        [SerializeField] 
-        private int _damage;
-
         private Mover _mover;
 
         private void Awake() => 
@@ -19,12 +16,7 @@ namespace Player
         private void FixedUpdate() => 
             _mover.Move(transform.right);
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.TryGetComponent(out Health damageable))
-                damageable.TakeDamage(_damage);
-            
+        private void OnTriggerEnter2D(Collider2D other) => 
             Destroy(gameObject);
-        }
     }
 }

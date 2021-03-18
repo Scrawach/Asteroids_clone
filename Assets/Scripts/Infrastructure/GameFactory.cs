@@ -1,4 +1,7 @@
+using Data;
+using Enemy;
 using Environment;
+using Infrastructure.AssetManagement;
 using Logic;
 using Player;
 using UI;
@@ -9,48 +12,47 @@ namespace Infrastructure
     public class GameFactory
     {
         private readonly ScoreCounter _scoreCounter;
-        
-        private Asteroid _asteroidPrefab;
-        private Engine _shipPrefab;
-        private ScoreView _hudPrefab;
-        private Spawner _spawnerPrefab;
-        
-        private Rect _playingZone;
+        private readonly AssetProvider _assetProvider;
+        private readonly Rect _playingZone;
 
-        public GameFactory(ScoreCounter scoreCounter, Rect playingZone)
+        private Transform _uiRoot;
+        private PlayerShip _playerShip;
+
+        public GameFactory(AssetProvider assetProvider, ScoreCounter scoreCounter, Rect playingZone)
         {
+            _assetProvider = assetProvider;
             _scoreCounter = scoreCounter;
             _playingZone = playingZone;
-            InitializePrefabs();
-        }
-        
-        private void InitializePrefabs()
-        {
-            _asteroidPrefab = Resources.Load<Asteroid>(AssetPath.Asteroid);
-            _shipPrefab = Resources.Load<Engine>(AssetPath.PlayerShip);
-            _hudPrefab = Resources.Load<ScoreView>(AssetPath.HUD);
-            _spawnerPrefab = Resources.Load<Spawner>(AssetPath.Spawner);
         }
 
-        public Spawner CreateSpawner()
+        public Spawner CreateSpawner(GameSettings settings)
         {
-            var spawner = Object.Instantiate(_spawnerPrefab);
-            spawner.Construct(this);
+            var spawner = _assetProvider.Initialize(AssetPath.Spawner).GetComponent<Spawner>();
+            spawner.Construct(this, settings);
             return spawner;
         }
 
-        public ScoreView CreateHUD()
+        public Alien CreateAlien(Vector3 position, int healthValue)
         {
-            var view = Object.Instantiate(_hudPrefab);
-            view.Construct(_scoreCounter);
-            return view;
+            var alien = _assetProvider.Initialize(AssetPath.AlienShip, position).GetComponent<Alien>();
+            alien.Construct(_playerShip.transform);
+            
+            if (alien.TryGetComponent(out Health health))
+                health.Construct(healthValue,healthValue);
+            
+            if (alien.TryGetComponent(out Score score))
+                score.Construct(_scoreCounter);
+            
+            return alien;
         }
         
         public Asteroid CreateAsteroid(Vector3 position, Quaternion rotation, int recycle, float size = 1)
         {
-            var asteroid = Object.Instantiate(_asteroidPrefab, position, rotation);
-            asteroid.Construct(_scoreCounter);
+            var asteroid = _assetProvider.Initialize(AssetPath.Asteroid, at: position, rotation).GetComponent<Asteroid>();
             asteroid.transform.localScale *= size;
+            
+            if (asteroid.TryGetComponent(out Score score))
+                score.Construct(_scoreCounter);
             
             if (asteroid.TryGetComponent(out AsteroidRecycleSpawn recycleSpawn))
                 recycleSpawn.Construct(this, recycle);
@@ -64,11 +66,32 @@ namespace Infrastructure
             return asteroid;
         }
 
-        public Engine CreatePlayerShip(Vector3 position, Rect workingZone)
+        public PlayerShip CreatePlayerShip(Vector3 position, int health, Rect workingZone)
         {
-            var ship = Object.Instantiate(_shipPrefab, position, Quaternion.identity);
-            ship.Construct(workingZone);
-            return ship;
+            _playerShip = _assetProvider.Initialize(AssetPath.PlayerShip, at: position).GetComponent<PlayerShip>();
+            _playerShip.Construct(workingZone);
+            _playerShip.GetComponent<Health>().Construct(health, health);
+            return _playerShip;
+        }
+        
+        public Transform CreateUIRoot()
+        {
+            _uiRoot = _assetProvider.Initialize(AssetPath.UIRoot).transform;
+            return _uiRoot;
+        }
+        
+        public ScoreView CreateScoreView()
+        {
+            var scoreView = _assetProvider.Initialize(AssetPath.ScoreViewHud, _uiRoot).GetComponent<ScoreView>();
+            scoreView.Construct(_scoreCounter);
+            return scoreView;
+        }
+        
+        public GameOverWindow CreateGameOverWindow()
+        {
+            var scoreView = _assetProvider.Initialize(AssetPath.GameOverWindow, _uiRoot).GetComponent<GameOverWindow>();
+            scoreView.Construct(_scoreCounter);
+            return scoreView;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Logic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Player
         private Death _death;
 
         private void Awake() => 
-            _death = GetComponent<Death>();
+            _death = GetComponent<Logic.Death>();
 
         private void OnEnable() => 
             _death.Happened += OnDeathHappened;

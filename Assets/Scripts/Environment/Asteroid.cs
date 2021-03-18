@@ -4,33 +4,35 @@ using Logic;
 using Player;
 using Unity.Mathematics;
 using UnityEngine;
+using Death = Logic.Death;
 using Random = UnityEngine.Random;
 
 namespace Environment
 {
     [RequireComponent(typeof(Death))]
     [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(Score))]
+    [RequireComponent(typeof(AsteroidRecycleSpawn))]
     public class Asteroid : MonoBehaviour
     {
-        private ScoreCounter _scoreCounter;
-
+        private Health _health;
         private Death _death;
         private Mover _mover;
+        
+        private AsteroidRecycleSpawn _recycleSpawn;
 
         private Vector2 _desiredDirection;
+        private bool _isLaser;
 
         public Vector2 Direction { get; private set; }
-
-        public void Construct(ScoreCounter scoreCounter)
-        {
-            _scoreCounter = scoreCounter;
-            _desiredDirection = transform.right;
-        }
-
+        
         private void Awake()
         {
             _death = GetComponent<Death>();
             _mover = GetComponent<Mover>();
+            _health = GetComponent<Health>();
+            _recycleSpawn = GetComponent<AsteroidRecycleSpawn>();
+            _desiredDirection = transform.right;
         }
 
         private void OnEnable() => 
@@ -47,22 +49,14 @@ namespace Environment
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.TryGetComponent(out Bullet bullet))
-            {
-                if (GetComponent<Health>().Current == 0)
-                    _scoreCounter.Increment();
-            }
-
             if (other.TryGetComponent(out Asteroid asteroid))
-            {
                 _desiredDirection = asteroid.Direction;
-            }
+            
+            if (!other.TryGetComponent(out Laser laser) && _health.IsDead)
+                _recycleSpawn.Spawn();
         }
 
-        private void OnDeathHappened()
-        {
-            //_scoreCounter.Increment();
+        private void OnDeathHappened() => 
             Destroy(gameObject);
-        }
     }
 }

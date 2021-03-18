@@ -3,36 +3,25 @@ using UnityEngine;
 
 namespace Player
 {
-    [RequireComponent(typeof(Engine))]
-    [RequireComponent(typeof(Weapon))]
     public class PlayerInput : MonoBehaviour
     {
         private const string HorizontalAxis = "Horizontal";
         private const string VerticalAxis = "Vertical";
-        private const string FireButton = "Fire1";
-
-        private Engine _ship;
-        private Weapon _weapon;
         
-        private Vector2 _desiredDirection;
-
-        private void Awake()
-        {
-            _ship = GetComponent<Engine>();
-            _weapon = GetComponent<Weapon>();
-        }
-
+        private const string FireButton = "Fire1";
+        private const string AltFireButton = "Fire2";
+        
+        public Vector2 Direction { get; private set; }
+        public bool Fired { get; private set; }
+        public bool AltFired { get; private set; }
+        
         private void Update()
         {
-            _desiredDirection = ReadInput().normalized;
-            
-            if (Input.GetButton(FireButton))
-                _weapon.TryFire();
+            Direction = ReadInput().normalized;
+            Fired = Input.GetButton(FireButton);
+            AltFired = Input.GetButton(AltFireButton);
         }
-
-        private void FixedUpdate() => 
-            _ship.Move(_desiredDirection);
-
+        
         private Vector2 ReadInput() =>
             new Vector2(Input.GetAxis(HorizontalAxis), Input.GetAxis(VerticalAxis));
     }

@@ -14,6 +14,7 @@ namespace UI
         [SerializeField] 
         private Button _quitButton;
 
+        [SerializeField]
         private ScoreView _scoreView;
 
         public void Construct(ScoreCounter counter) =>

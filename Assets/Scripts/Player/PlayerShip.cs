@@ -3,25 +3,48 @@ using UnityEngine;
 
 namespace Player
 {
+    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(Weapon))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Engine : MonoBehaviour
+    public class PlayerShip : MonoBehaviour
     {
         [SerializeField] 
         private float _speed;
         
         [SerializeField]
         private float _accelerationModifier = 1;
+
+        [SerializeField] 
+        private Weapon _defaultWeapon;
         
-        private Rigidbody2D _rigidbody;
+        [SerializeField] 
+        private Weapon _altWeapon;
         
-        private Vector2 _velocity;
         private Rect _workingBounds;
+
+        private PlayerInput _playerInput;
+        private Rigidbody2D _rigidbody;
+        private Vector2 _velocity;
 
         public void Construct(Rect workingZone) => 
             _workingBounds = workingZone;
 
-        private void Awake() => 
+        private void Awake()
+        {
             _rigidbody = GetComponent<Rigidbody2D>();
+            _playerInput = GetComponent<PlayerInput>();
+        }
+        
+        private void FixedUpdate()
+        {
+            Move(_playerInput.Direction);
+            
+            if (_playerInput.Fired)
+                _defaultWeapon.TryFire();
+            
+            if (_playerInput.AltFired)
+                _altWeapon.TryFire();
+        }
 
         public void Move(Vector2 direction)
         {

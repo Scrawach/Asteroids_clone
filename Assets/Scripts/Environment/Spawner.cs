@@ -1,4 +1,5 @@
 ﻿using System;
+using Data;
 using Infrastructure;
 using UI;
 using UnityEngine;
@@ -11,46 +12,55 @@ namespace Environment
         [SerializeField] 
         private Rect _spawnZone;
 
-        [SerializeField] 
-        private Rect _workingZone;
-
-        [SerializeField] 
-        private float _spawnCooldown;
-        
-        private float _elapsedTime;
+        private float _asteroidElapsedTime;
+        private float _alienElapsedTime;
         
         private GameFactory _gameFactory;
+        private GameSettings _settings;
 
-        public void Construct(GameFactory gameFactory) => 
+        public void Construct(GameFactory gameFactory, GameSettings settings)
+        {
             _gameFactory = gameFactory;
+            _settings = settings;
+        }
 
         private void Update()
         {
-            if (CanSpawn())
-            {
-                SpawnAsteroidInBorder();
-                ResetCooldown();
-            }
-            else
-            {
-                UpdateCooldown();
-            }
+            TrySpawn(_asteroidElapsedTime, _settings.AsteroidRecycle, SpawnAsteroidInBorder);
+            TrySpawn(_alienElapsedTime, _settings.AlienSpawnCooldown, SpawnAlien);
+
+            _alienElapsedTime += Time.deltaTime;
+            _asteroidElapsedTime += Time.deltaTime;
         }
+        
+        private void TrySpawn(float elapsedTime, float targetTime, Action spawnFunc)
+        {
+            if (elapsedTime > targetTime)
+                spawnFunc?.Invoke();
+        }
+        
+        private void SpawnAlien()
+        {
+            var rotation = Quaternion.identity;
+            var position = GetCoords(ref rotation);
 
-        private void UpdateCooldown() => 
-            _elapsedTime += Time.deltaTime;
-
-        private void ResetCooldown() => 
-            _elapsedTime = 0f;
-
-        private bool CanSpawn() => 
-            _spawnCooldown <= _elapsedTime;
+            _gameFactory.CreateAlien(position, _settings.AlienHealth);
+            _alienElapsedTime = 0f;
+        }
 
         private void SpawnAsteroidInBorder()
         {
-            var position = Vector2.zero;
             var rotation = Quaternion.identity;
+            var position = GetCoords(ref rotation);
 
+            _gameFactory.CreateAsteroid(position, rotation, _settings.AsteroidRecycle);
+            _asteroidElapsedTime = 0f;
+        }
+
+        private Vector2 GetCoords(ref Quaternion rotation)
+        {
+            var position = Vector2.zero;
+            
             switch (Random.Range(0, 4))
             {
                 case 0:
@@ -71,9 +81,9 @@ namespace Environment
                     break;
             }
 
-            _gameFactory.CreateAsteroid(position, rotation, 1);
+            return position;
         }
-        
+
         private Vector2 GetRandomPosition()
         {
             return new Vector2(Random.Range(_spawnZone.xMin, _spawnZone.xMax), 
